@@ -1,66 +1,109 @@
-# Web Search Agent (SearchSavvy)
+# Deep Research Agent System
 
-This project implements a web search agent using the `openai-agents` library, integrated with the Tavily API for web searches and personalized responses based on user profiles. The agent dynamically adjusts its behavior based on user context and query keywords.
+## 📌 Introduction
 
-## Setup Steps
+The **Deep Research Agent System specialized in helping users with learning and mastering a new skill** is an AI-powered research assistant built with **FastAPI** and a modular chain of specialized agents built using the OPENAI AGENTS SDK. It helps users conduct in-depth research on learning goals, topics, courses, articles, and more.
 
-1. **Install uv**: Ensure you have `uv` installed. If not, install it by following the instructions at [uv documentation](https://docs.astral.sh/uv/).
+The system integrates multiple agents:
 
-2. **Clone the Repository**:
+- **Requirement Gathering Agent** → captures the user's intent and requirements.
+- **Deep Research Agent** → orchestrates the research pipeline.
+  - **Query Generator Agent** → creates master and sub-queries.
+  - **Tavily Search Tool** → fetches and extracts information from the web.
+  - **Synthesis Agent** → analyzes and synthesizes the extracted results.
+  - **Writer Agent** → generates a polished Markdown report.
+  - **Reflection Agent** → reviews and ensures quality of the final output.
 
-   ```bash
-   git clone https://github.com/ehtashamtoor/websearch-agent
-   cd websearch-agent
-   ```
+The result is a high-quality, citation-rich **Markdown report** streamed back to the user in real time.
 
-3. **Set Up the Virtual Environment**:
-   This project uses `uv` to manage dependencies. Run the following command to create a virtual environment and install dependencies from `pyproject.toml`:
+---
 
-   ```bash
-   uv sync
-   ```
+## ⚙️ Project Setup
 
-4. **Set Up Environment Variables**:
-   Create a `.env` file in the project root directory and add the following environment variables:
+### 1. Clone the Repository
 
-   ```bash
-   GOOGLE_API_KEY=<your-google-api-key>
-   TAVILY_API_KEY=<your-tavily-api-key>
-   ```
+```bash
+git clone https://github.com/ehtashamtoor/skill-learn-deep-search-agent.git
+cd skill-learn-deep-search-agent
+```
 
-   - Obtain a Google API key for the Gemini model from [Google Cloud](https://cloud.google.com/).
-   - Obtain a Tavily API key from [Tavily](https://tavily.com/).
+### 2. Create Virtual Environment (optional but recommended)
 
-5. **Activate the Virtual Environment**:
-   Activate the virtual environment created by `uv`:
-   ```bash
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
+```bash
+python -m venv .venv
+source .venv/bin/activate   # for Linux/Mac
+.venv\Scripts\activate      # for Windows
+```
 
-## How Personalisation Works
+### 3. Install Dependencies
 
-The web search agent personalizes responses using a `UserProfile` class defined in `userContext.py`. Here's how it works:
+```bash
+pip install uv
+uv pip install -e .
+```
 
-- **User Context**: The `UserProfile` dataclass stores user-specific information such as `name`, `topic` of interest, `city`, and a unique `uid`. This data is used to tailor responses to the user's preferences.
-- **Dynamic Instructions**: The `dynamic_instructions` function in `web_search_agent.py` generates instructions for the agent based on the user's profile. For example, it includes the user's name to make responses more engaging and personalized.
-- **Query Adjustment**: The agent detects specific keywords (e.g., "deeper", "summarize", "explain", "detailed") in the user's query and adjusts the `max_results` parameter for the `web_search` tool to provide more or fewer results as needed.
-- **Mock Data**: The `mockData.py` file contains sample user profiles for testing. The agent uses these profiles to simulate personalized interactions during development or demos.
+### 4. Environment Variables
 
-This approach ensures that the agent's responses are context-aware and relevant to the user's interests and needs.
+Create a **.env** file in the project root with the following values:
 
-## How to Run the Demo
+```env
+HOST=127.0.0.1
+PORT=8000
 
-1. **Ensure Setup is Complete**: Follow the setup steps above to install dependencies and configure environment variables.
+# API Keys
+GOOGLE_API_KEY=your_google_api_key
+TAVILY_API_KEY=your_tavily_api_key
+OPENAI_API_KEY=your_openai_api_key
 
-2. **Run the Agent**:
-   The demo uses the `web_search_agent.py` script, which now supports continuous user interaction:
+# LLM
+model=gpt-4o-mini
+BASE_URL=https://api.openai.com/v1
 
-   ```bash
-   uv run python web_search_agent.py
+# Supabase
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+```
 
-   ```
+⚠️ The project will not run if required variables are missing.
 
-3. **Modify the Demo**:
+---
 
-   - To test with different user profiles, edit the `user_profile` selection in the `main()` function of `web_search_agent.py`. For example, change `profiles[1]` to `profiles[0]` to use Alice's profile (Machine Learning).
-   - Update the query in the `Runner.run_streamed` call to test different search terms or keywords like "detailed" or "explain".
+## 🚀 Running the Project
+
+### Run with Python directly
+
+```bash
+uv run python main.py
+```
+
+This will start the FastAPI server at:
+
+```
+http://127.0.0.1:8000
+```
+
+### Available Endpoints
+
+- `` → Health check endpoint.
+- `` → Main research endpoint.
+  - **Request Body:**
+    ```json
+    {
+      "query": "Best resources to learn deep reinforcement learning",
+      "uid": "2"
+    }
+    ```
+  - **Response:** Server-Sent Events (SSE) streaming the research report in Markdown.
+
+---
+
+## ✅ Summary
+
+This project is designed as a **multi-agent deep research system** with real-time streaming responses. It leverages **FastAPI, OpenAI models, Tavily search, and Supabase** to provide structured, reliable research assistance.
+
+You can extend it by:
+
+- Adding new specialized agents.
+- Integrating more data sources.
+- Enhancing reflection & quality checks.
+
