@@ -23,7 +23,7 @@ The result is a high-quality, citation-rich **Markdown report** streamed back to
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/ehtashamtoor/skill-learn-deep-search-agent.git
+git clone https://github.com/ehtashamtoor/skill-learn-DRA-agent.git
 cd skill-learn-deep-search-agent
 ```
 
@@ -106,4 +106,3 @@ You can extend it by:
 - Adding new specialized agents.
 - Integrating more data sources.
 - Enhancing reflection & quality checks.
-
